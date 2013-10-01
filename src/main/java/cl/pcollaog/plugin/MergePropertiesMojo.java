@@ -85,7 +85,6 @@ public class MergePropertiesMojo extends AbstractMojo {
 					propertyOut.store(outputStream, "Merge Properties");
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
