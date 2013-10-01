@@ -12,7 +12,7 @@ public final class MergeConfig {
 
 	private File outputDirectory;
 
-	private File inputDirectory;
+	private File sourceDirectory;
 
 	private String pattern;
 
@@ -47,18 +47,18 @@ public final class MergeConfig {
 	}
 
 	/**
-	 * @return the inputDirectory
+	 * @return the sourceDirectory
 	 */
-	public File getInputDirectory() {
-		return inputDirectory;
+	public File getSourceDirectory() {
+		return sourceDirectory;
 	}
 
 	/**
-	 * @param inputDirectory
-	 *            the inputDirectory to set
+	 * @param sourceDirectory
+	 *            the sourceDirectory to set
 	 */
-	public void setInputDirectory(File inputDirectory) {
-		this.inputDirectory = inputDirectory;
+	public void setSourceDirectory(File sourceDirectory) {
+		this.sourceDirectory = sourceDirectory;
 	}
 
 	/**

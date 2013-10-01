@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Properties;
 
@@ -23,6 +25,11 @@ import org.apache.maven.plugins.annotations.Parameter;
 @Mojo(name = "merge")
 public class MergePropertiesMojo extends AbstractMojo {
 
+	/**
+	 * 
+	 */
+	private static final String DEFAULT_ENCODING = "UTF-8";
+
 	@Parameter(property = "merges")
 	private List<MergeConfig> merges;
 
@@ -35,22 +42,51 @@ public class MergePropertiesMojo extends AbstractMojo {
 
 		for (MergeConfig mergeConfig : merges) {
 			FileFilter filter = new WildcardFileFilter(mergeConfig.getPattern());
-			File[] listFiles = mergeConfig.getInputDirectory()
-					.listFiles(filter);
+			File[] listFiles = mergeConfig.getSourceDirectory().listFiles(
+					filter);
 
 			for (File file : listFiles) {
 				try {
 					Properties prop = new Properties();
-					InputStream is = new FileInputStream(file);
+					InputStreamReader is = new InputStreamReader(
+							new FileInputStream(file), DEFAULT_ENCODING);
 					prop.load(is);
-
 					propertyOut.putAll(prop);
-
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+
+			try {
+				File outputDirectory = mergeConfig.getOutputDirectory();
+
+				if (!outputDirectory.exists()) {
+					outputDirectory.mkdirs();
+				}
+
+				if (outputDirectory.exists() && outputDirectory.isDirectory()) {
+					String outTmp = outputDirectory.getPath() + File.separator
+							+ mergeConfig.getOutputFilename();
+
+					File out = new File(outTmp);
+
+					if (!out.exists()) {
+						out.createNewFile();
+					} else {
+						out.delete();
+						out.createNewFile();
+					}
+
+					OutputStreamWriter outputStream = new OutputStreamWriter(
+							new FileOutputStream(out), DEFAULT_ENCODING);
+
+					propertyOut.store(outputStream, "Merge Properties");
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
