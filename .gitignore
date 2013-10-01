@@ -1,3 +1,9 @@
 .externalToolBuilders
 .settings
 target
+*.class
+bin
+# Package Files #
+*.jar
+*.war
+*.ear
